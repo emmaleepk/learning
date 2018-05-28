@@ -1,0 +1,49 @@
+
+<header>
+	<div class="container">
+		<div id="logo">
+			<h1>Piranah</h1>
+			<h1>Fitness</h1>
+			<h1>Studio</h1>
+		</div>
+	</div>
+</header><br>
+
+<section>
+	<div class="grid" id="dashboard">
+			<div class="dash_item title">
+				<p>EMMALEE KEATLEY</p>
+			</div>
+			<div class="dash_item box itemOne">
+				<h3>VISITS</h3>
+				<span>Week/Month/Year:</span><br>
+				<span>1/3/12</span>
+				<div class="firstList">
+					<span>Wednesday: </span><span id="num">2</span>
+				</div>
+				<span>Tuesday: </span><span id="num">1</span>
+				<span>
+			</div>
+			<div class="dash_item box itemTwo">
+				<h3>CLASS BREAKDOWN</h3>
+				<canvas id="classChart"></canvas>
+			</div><br>
+ 			<div class="dash_item box itemThree">
+				<h3>INSTRUCTORS</h3>
+				<p>Your favorite instructors:</p>
+				<div class="firstList">
+					<span>Lindsay: </span><span id="num">2</span>
+				</div>
+				<span>Emily: </span><span id="num">2</span>
+			</div>
+			<div class="dash_item box itemFour">
+				<h3>YOUR YEAR</h3>
+				<canvas id="yearChart"></canvas>
+			</div>
+	</div>
+</section>
+
+<script>
+	classChart()
+	yearChart()
+</script>
