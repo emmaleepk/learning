@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname,'/public')));
 
 
 // Routes
-app.get('/', function(req, res, next){
+app.get('/', function(req, res){
   db.users.find(function(err,docs){
     if(err){
       res.send(err);
@@ -31,7 +31,7 @@ app.get('/', function(req, res, next){
 });
 
 //Special ID
-app.get('/:id', function(req, res, next){
+app.get('/:id', function(req, res){
   db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err,doc){
     if(err){
       res.send(err);
