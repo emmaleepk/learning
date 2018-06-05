@@ -1,0 +1,167 @@
+<% include partials/header %>
+
+<header>
+	<div class="container">
+		<div id="logo">
+			<h1>Piranah</h1>
+			<h1>Fitness</h1>
+			<h1>Studio</h1>
+		</div>
+	</div>
+</header><br>
+
+<section>
+	<div class="grid" id="dashboard">
+			<div class="dash_item title">
+				<p><%= user.first_name %> <%= user.last_name %></p>
+			</div>
+			<div class="dash_item box itemOne">
+				<h3>Visits</h3>
+				<span>Week/Month/Year:</span><br>
+				<%# variables used to hold values from parsed JS object  %>
+				<% var currentDate = new Date() %>
+				<% var totalInYear = 0, totalInMonth = 0, totalInWeek = 0 %>
+				<% var dayObject = {Sunday: 0, Monday:0, Tuesday: 0, Wednesday:0, Thursday:0, Friday:0, Saturday: 0} %>
+				<% var monthArray = [["Jan", 0],["Feb", 0],["Mar", 0],["Apr", 0],["May", 0],["Jun", 0],["Jul", 0],["Aug", 0],
+				["Sep", 0],["Oct", 0],["Nov", 0],["Dec", 0]]%>
+				<% var classTypeObject = {} %>
+				<% var instructorObject = {} %>
+				<% var monthCountObject = {} %>
+				<%# Below is the for loop that goes thought the users JS object from the mongoDB %>
+				<%# This gets all the different variables needed to display on webpage except    %>
+				<%# The first part of loop gets the count of the instructors, The second part    %>
+				<%# gets the count of which days a class was taken, the third part gets the      %>
+				<%# class count for the current year, the forth part gets the class count for    %>
+				<%#                           the current month                                  %>
+				<% for(var i=0; i < user.class.length; i++) { %>
+
+					<% var y = user.class[i].instructor %>
+					<% typeof instructorObject[y] === 'undefined' ? instructorObject[y] = 1 : instructorObject[y]++ %>
+
+					<% var z = user.class[i].date.getMonth() %>
+					<% typeof monthCountObject[z] === 'undefined' ? monthCountObject[z] = 1 : monthCountObject[z]++ %>
+
+				 <% var t = user.class[i].type %>
+				 <% typeof classTypeObject[t] === 'undefined' ? classTypeObject[t] = 1 : classTypeObject[t]++ %>
+
+				<% var sortableClassType = [] %>
+				<% for(var classType in classTypeObject){ %>
+					 <% sortableClassType.push([classType, classTypeObject[classType]]) %>
+				<% } %>
+				<%  %>
+
+					<% var x = user.class[i].date.getDay() %>
+
+					<% if (x==0){ %>
+						<%	dayObject['Sunday']++ %>
+						<% } else if (x==1){ %>
+							<% dayObject['Monday']++ %>
+						<% } else if (x==2){ %>
+							<% dayObject['Tuesday']++ %>
+						<% } else if (x==3){ %>
+							<% dayObject['Wednesday']++ %>
+						<% } else if (x==4){ %>
+							<% dayObject['Thursday']++ %>
+						<% } else if (x==5){ %>
+							<% dayObject['Friday']++ %>
+						<% } else if (x==6){ %>
+							<% dayObject['Saturday']++ %>
+						<% } else { %>
+							<%= alert("error") %>
+						 <% } %>
+
+				 <%if(user.class[i].date.getUTCFullYear()== currentDate.getUTCFullYear()){  %>
+						<% totalInYear = totalInYear + 1 %>
+							<% if(user.class[i].date.getMonth()==currentDate.getMonth()){ %>
+								<% totalInMonth = totalInMonth + 1 %>
+							<% } %>
+					<% } %>
+				<% } %>
+
+				<%# Below for-loop gets totalInWeek%>
+				<% for(var j = 0; j < 7; j++){ %>
+					<% var dateInc = currentDate.setDate(currentDate.getDate() - j) %>
+					<% for(var i = 0; i < user.class.length; i++){ %>
+						<% if(user.class[i].date.toDateString() === new Date(dateInc).toDateString()){ %>
+							 <% totalInWeek = totalInWeek + 1 %>
+						<% } %>
+					<% } %>
+				<% } %>
+
+				<% for(var month in monthCountObject){ %>
+					<% month == 0
+					? monthArray[0][1] = monthCountObject[month]
+					: month == 1
+					? monthArray[1][1] = monthCountObject[month]
+					: month == 2
+					? monthArray[2][1] = monthCountObject[month]
+					: month == 3
+					? monthArray[3][1] = monthCountObject[month]
+					: month == 4
+					? monthArray[4][1] = monthCountObject[month]
+					: month == 5
+					? monthArray[5][1] = monthCountObject[month]
+					: month == 6
+					? monthArray[6][1] = monthCountObject[month]
+					: month == 7
+					? monthArray[7][1] = monthCountObject[month]
+					: month == 8
+					? monthArray[8][1] = monthCountObject[month]
+					: month == 9
+					? monthArray[9][1] = monthCountObject[month]
+					: month == 10
+					? monthArray[10][1] = monthCountObject[month]
+					: month == 11
+					? monthArray[11][1] = monthCountObject[month]
+					: alert("error") %>
+				<% } %>
+
+				<%# Creates an array to sort most visited days to be displayed on webpage %>
+				<% var sortable = [] %>
+				<% for(var day in dayObject){ %>
+					 <% sortedDays = sortable.push([dayObject[day], day]) %>
+				<% } %>
+				<% sortedDays = sortable.sort().reverse() %>
+				<h4><%= totalInWeek %>/<%= totalInMonth %>/<%= totalInYear %> </h4>
+				<h4>Your favorite days:</h4>
+				<div class="firstList">
+					<span> <%= sortedDays[0][1]+':' %> </span><span id="num"><%=sortedDays[0][0]%></span>
+				</div>
+				<% for(var i = 1; i < 4; i++){ %>
+					<span><%= sortedDays[0+i][1]+':' %><span id="num"><%= sortedDays[0+i][0]%></span><br>
+				<% } %>
+				<span>
+			</div>
+			<div class="dash_item box itemTwo">
+				<h3>CLASS BREAKDOWN</h3>
+				<canvas id="classChart"></canvas>
+			</div><br>
+ 			<div class="dash_item box itemThree">
+				<% var sortableInst = [] %>
+				<% for(var count in instructorObject){ %>
+					<% sortedInst = sortableInst.push([instructorObject[count], count]) %>
+				<% } %>
+				<% sortedInst = sortableInst.sort().reverse() %>
+				<h3>INSTRUCTORS</h3>
+				<h4>Your favorite instructors:</h4>
+				<div class="firstList">
+					<span><%= sortedInst[0][1]+':' %> </span><span id="num"><%= sortedInst[0][0] %></span>
+				</div>
+				<% for(var i = 1; i < sortedInst.length; i++){ %>
+					<span><%= sortedInst[0+i][1]+':' %><span id="num"><%= sortedInst[0+i][0] %></span><br>
+				<% } %>
+
+			</div>
+			<div class="dash_item box itemFour">
+				<h3>YOUR YEAR</h3>
+				<canvas id="yearChart"></canvas>
+			</div>
+	</div>
+</section>
+
+<script>
+	classChart()
+	yearChart()
+</script>
+
+<%include partials/footer%>
