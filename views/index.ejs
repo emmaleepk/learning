@@ -18,6 +18,7 @@
 			<div class="dash_item box itemOne">
 				<h3>Visits</h3>
 				<span>Week/Month/Year:</span><br>
+				<% var lables = ['June', 'July'] %>
 				<%# variables used to hold values from parsed JS object  %>
 				<% var currentDate = new Date() %>
 				<% var totalInYear = 0, totalInMonth = 0, totalInWeek = 0 %>
@@ -150,6 +151,8 @@
 				<% for(var i = 1; i < sortedInst.length; i++){ %>
 					<span><%= sortedInst[0+i][1]+':' %><span id="num"><%= sortedInst[0+i][0] %></span><br>
 				<% } %>
+
+
 
 			</div>
 			<div class="dash_item box itemFour">
